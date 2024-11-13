@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controls } from '~/components/controls/Controls'
 import { ConversationLog } from '~/components/convLog/ConversationLog'
 import { EventsLog } from '~/components/eventLog/EventsLog'
+import ImageDisplay from '~/components/genimage/ImageDisplay'
 import { Header } from '~/components/header/Header'
 import { MemoryDisplay } from '~/components/memory/MemoryDisplay'
 import { Visualization } from '~/components/visualization/Visualization'
@@ -76,6 +77,7 @@ export function ConsolePage() {
   const [canPushToTalk, setCanPushToTalk] = useState(true)
   const [isRecording, setIsRecording] = useState(false)
   const [memoryKv, setMemoryKv] = useState<{ [key: string]: any }>({})
+  const [imageUrl, genImageUrl] = useState<string>('')
   const [coords, setCoords] = useState<Coordinates | null>({
     lat: 37.775593,
     lng: -122.418137,
@@ -90,6 +92,8 @@ export function ConsolePage() {
     setMemoryKv,
     setMarker,
     setCoords,
+    genImageUrl,
+    apiKey,
   })
 
   // Utility Functions
@@ -343,6 +347,7 @@ export function ConsolePage() {
         <div className="content-right">
           <WeatherMap coords={coords} marker={marker} />
           <MemoryDisplay memoryKv={memoryKv} />
+          <ImageDisplay prompt={imageUrl} api={apiKey} />
         </div>
       </div>
     </div>

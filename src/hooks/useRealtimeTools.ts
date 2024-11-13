@@ -2,6 +2,7 @@
 
 import type { RealtimeClient } from '@openai/realtime-api-beta'
 import { useEffect } from 'react'
+import { genImageTool } from '~/tools/genImageTool'
 import { getWeatherTool } from '~/tools/getWeatherTool'
 import { setMemoryTool } from '~/tools/setMemoryTool'
 
@@ -24,6 +25,8 @@ interface UseRealtimeToolsProps {
   setMemoryKv: React.Dispatch<React.SetStateAction<{ [key: string]: any }>>
   setMarker: React.Dispatch<React.SetStateAction<Coordinates | null>>
   setCoords: React.Dispatch<React.SetStateAction<Coordinates | null>>
+  genImageUrl: React.Dispatch<React.SetStateAction<string>>
+  apiKey: string
 }
 
 export function useRealtimeTools({
@@ -31,6 +34,8 @@ export function useRealtimeTools({
   setMemoryKv,
   setMarker,
   setCoords,
+  genImageUrl,
+  apiKey,
 }: UseRealtimeToolsProps) {
   useEffect(() => {
     // Register set_memory tool
@@ -54,6 +59,16 @@ export function useRealtimeTools({
         getWeatherTool.callback(params, setMarker, setCoords),
     )
 
+    client.addTool(
+      {
+        name: genImageTool.name,
+        description: genImageTool.description,
+        parameters: genImageTool.parameters,
+      },
+      async (params: any) =>
+        genImageTool.callback(params, genImageUrl),
+    )
+
     // Cleanup function if necessary
     return () => {
       // If RealtimeClient has a method to remove tools, invoke it here
@@ -62,5 +77,5 @@ export function useRealtimeTools({
       // client.removeTool('get_weather');
       // Since it's unclear, we'll leave it as a comment.
     }
-  }, [client, setMemoryKv, setMarker, setCoords])
+  }, [client, setMemoryKv, setMarker, setCoords, genImageUrl, apiKey])
 }
