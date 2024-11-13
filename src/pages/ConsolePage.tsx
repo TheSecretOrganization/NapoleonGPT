@@ -414,7 +414,7 @@ export function ConsolePage() {
         {/* Sidebar */}
         <div className="content-right">
           {victorHugoImage && (
-              <img src={victorHugoImage} alt="Victor Hugo" style={{ width: '100%', marginBottom: '20px' }} />
+              <img src={victorHugoImage} alt="Victor Hugo" style={{ width: '100%', marginBottom: '20px', borderRadius: '20px' }} />
           )}
           <ImageDisplay prompt={imageUrl} api={apiKey} />
           <ShowBook book={book} />
