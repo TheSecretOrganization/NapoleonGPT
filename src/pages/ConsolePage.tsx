@@ -13,18 +13,17 @@ import { RealtimeClient } from '@openai/realtime-api-beta'
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDown, ArrowUp, Edit, X, Zap } from 'react-feather'
-import { Button } from '../components/button/Button'
+import { Button } from '~/components/button/Button'
 
-import { Map } from '../components/Map'
-import { Toggle } from '../components/toggle/Toggle'
-import { WavRecorder, WavStreamPlayer } from '../lib/wavtools/index.js'
-import { instructions } from '../utils/conversation_config.js'
+import { Map } from '~/components/map/Map'
+import { Toggle } from '~/components/toggle/Toggle'
+import { WavRecorder, WavStreamPlayer } from '~/lib/wavtools'
+import { instructions } from '~/utils/conversation_config'
 
-import { WavRenderer } from '../utils/wav_renderer'
+import { WavRenderer } from '~/utils/wav_renderer'
 import './ConsolePage.scss'
 
-const LOCAL_RELAY_SERVER_URL: string
-  = process.env.REACT_APP_LOCAL_RELAY_SERVER_URL || ''
+const LOCAL_RELAY_SERVER_URL: string = ''
 
 /**
  * Type for result from get_weather() function call
@@ -377,7 +376,7 @@ export function ConsolePage() {
 
     // Set instructions
     client.updateSession({ instructions })
-    client.updateSession({ voice: 'ballad' })
+    client.updateSession({ voice: 'ash' })
     // Set transcription, otherwise we don't get user transcriptions back
     client.updateSession({ input_audio_transcription: { model: 'whisper-1' } })
 
