@@ -15,6 +15,9 @@ import { useRealtimeTools } from '~/hooks/useRealtimeTools'
 import { WavRecorder, WavStreamPlayer } from '~/lib/wavtools'
 import { instructions } from '~/utils/conversation_config'
 import './ConsolePage.scss'
+import OpenAI from 'openai'
+import { z } from 'zod'
+import { zodResponseFormat } from 'openai/helpers/zod'
 
 const LOCAL_RELAY_SERVER_URL: string = ''
 
@@ -31,6 +34,12 @@ interface Coordinates {
     units: string
   }
 }
+
+const Book = z.object({
+  title: z.string(),
+  release: z.number(),
+  description: z.string()
+})
 
 interface RealtimeEvent {
   time: string
@@ -82,6 +91,7 @@ export function ConsolePage() {
     lat: 37.775593,
     lng: -122.418137,
   })
+  const [book, setBook] = useState<any>(null)
   const [marker, setMarker] = useState<Coordinates | null>(null)
 
   const startTimeRef = useRef<string>(new Date().toISOString())
@@ -248,6 +258,47 @@ export function ConsolePage() {
     client.updateSession({ voice: 'ash' })
     client.updateSession({ input_audio_transcription: { model: 'whisper-1' } })
 
+    client.addTool(
+      {
+        "name": "describe_books",
+        "description": "Décris les livres dont tu parles",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Le titre du livre"
+            },
+            "genre": {
+              "type": "string",
+              "description": "Le genre littéraire du livre"
+            },
+            "publication_year": {
+              "type": "number",
+              "description": "L'année de publication du livre"
+            },
+            "summary": {
+              "type": "string",
+              "description": "Un résumé du contenu du livre"
+            }
+          },
+          "required": [
+            "title",
+            "genre",
+            "summary"
+          ]
+        }
+      },
+      async ({title, genre, release, summary}: any) => {
+        setBook({
+          title: title,
+          genre: genre,
+          release: release,
+          summary: summary,
+        })
+      }
+    )
+
     // Handle realtime events
     client.on('realtime.event', (realtimeEvent: RealtimeEvent) => {
       setRealtimeEvents((prevEvents) => {
@@ -348,8 +399,21 @@ export function ConsolePage() {
           <WeatherMap coords={coords} marker={marker} />
           <MemoryDisplay memoryKv={memoryKv} />
           <ImageDisplay prompt={imageUrl} api={apiKey} />
+          <ShowBook book={book} />
         </div>
       </div>
     </div>
+  )
+}
+
+export function ShowBook(book: any) {
+  console.log(book)
+  if (book.book == null)
+    return (<></>)
+  return (
+    <>
+      <p>Title {book.book.title}</p>
+      <p>Genre {book.book.genre}</p>
+    </>
   )
 }
