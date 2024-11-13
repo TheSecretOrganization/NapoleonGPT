@@ -50,6 +50,7 @@ interface RealtimeEvent {
 }
 
 export function ConsolePage() {
+  const [victorHugoImage, setVictorHugoImage] = useState<string>('')
   // API Key Management
   const apiKey = LOCAL_RELAY_SERVER_URL
     ? ''
@@ -247,6 +248,22 @@ export function ConsolePage() {
   }, [items])
 
   // Visualization Component doesn't need to be handled here as it's encapsulated
+  useEffect(() => {
+    const fetchVictorHugoImage = async () => {
+      try {
+        const response = await fetch(
+            'https://en.wikipedia.org/w/api.php?action=query&titles=Victor%20Hugo&prop=pageimages&format=json&pithumbsize=500&origin=*'
+        )
+        const data = await response.json()
+        const pageId = Object.keys(data.query.pages)[0]
+        const imageUrl = data.query.pages[pageId].thumbnail.source
+        setVictorHugoImage(imageUrl)
+      } catch (error) {
+        console.error('Error fetching Victor Hugo image:', error)
+      }
+    }
+    fetchVictorHugoImage()
+  }, [])
 
   // RealtimeClient and Audio Setup
   useEffect(() => {
@@ -396,8 +413,9 @@ export function ConsolePage() {
 
         {/* Sidebar */}
         <div className="content-right">
-          <WeatherMap coords={coords} marker={marker} />
-          <MemoryDisplay memoryKv={memoryKv} />
+          {victorHugoImage && (
+              <img src={victorHugoImage} alt="Victor Hugo" style={{ width: '100%', marginBottom: '20px' }} />
+          )}
           <ImageDisplay prompt={imageUrl} api={apiKey} />
           <ShowBook book={book} />
         </div>
