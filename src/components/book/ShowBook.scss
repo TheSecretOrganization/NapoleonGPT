@@ -1,0 +1,30 @@
+.book-container {
+  width: 300px;
+  height: auto;
+  border-radius: 15px;
+  background-color: rgba(249, 249, 249, 0.68);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.book-title {
+  font-size: 1.5em;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.book-author {
+  font-size: 1.2em;
+  text-align: center;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.book-description {
+  text-align: center;
+  font-size: 1em;
+  line-height: 1.5;
+  color: #333;
+}

@@ -3,21 +3,18 @@
 import type { ItemType } from '@openai/realtime-api-beta/dist/lib/client.js'
 import { RealtimeClient } from '@openai/realtime-api-beta'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { z } from 'zod'
+import { ShowBook } from '~/components/book/ShowBook'
 import { Controls } from '~/components/controls/Controls'
 import { ConversationLog } from '~/components/convLog/ConversationLog'
 import { EventsLog } from '~/components/eventLog/EventsLog'
 import ImageDisplay from '~/components/genimage/ImageDisplay'
 import { Header } from '~/components/header/Header'
-import { MemoryDisplay } from '~/components/memory/MemoryDisplay'
 import { Visualization } from '~/components/visualization/Visualization'
-import { WeatherMap } from '~/components/weather/WeatherMap'
 import { useRealtimeTools } from '~/hooks/useRealtimeTools'
 import { WavRecorder, WavStreamPlayer } from '~/lib/wavtools'
 import { instructions } from '~/utils/conversation_config'
 import './ConsolePage.scss'
-import OpenAI from 'openai'
-import { z } from 'zod'
-import { zodResponseFormat } from 'openai/helpers/zod'
 
 const LOCAL_RELAY_SERVER_URL: string = ''
 
@@ -38,7 +35,7 @@ interface Coordinates {
 const Book = z.object({
   title: z.string(),
   release: z.number(),
-  description: z.string()
+  description: z.string(),
 })
 
 interface RealtimeEvent {
@@ -252,13 +249,14 @@ export function ConsolePage() {
     const fetchVictorHugoImage = async () => {
       try {
         const response = await fetch(
-            'https://en.wikipedia.org/w/api.php?action=query&titles=Victor%20Hugo&prop=pageimages&format=json&pithumbsize=500&origin=*'
+          'https://en.wikipedia.org/w/api.php?action=query&titles=Victor%20Hugo&prop=pageimages&format=json&pithumbsize=500&origin=*',
         )
         const data = await response.json()
         const pageId = Object.keys(data.query.pages)[0]
         const imageUrl = data.query.pages[pageId].thumbnail.source
         setVictorHugoImage(imageUrl)
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Error fetching Victor Hugo image:', error)
       }
     }
@@ -277,43 +275,43 @@ export function ConsolePage() {
 
     client.addTool(
       {
-        "name": "describe_books",
-        "description": "Décris les livres dont tu parles",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string",
-              "description": "Le titre du livre"
+        name: 'describe_books',
+        description: 'Décris les livres dont tu parles',
+        parameters: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string',
+              description: 'Le titre du livre',
             },
-            "genre": {
-              "type": "string",
-              "description": "Le genre littéraire du livre"
+            genre: {
+              type: 'string',
+              description: 'Le genre littéraire du livre',
             },
-            "publication_year": {
-              "type": "number",
-              "description": "L'année de publication du livre"
+            publication_year: {
+              type: 'number',
+              description: 'L\'année de publication du livre',
             },
-            "summary": {
-              "type": "string",
-              "description": "Un résumé du contenu du livre"
-            }
+            summary: {
+              type: 'string',
+              description: 'Un résumé du contenu du livre',
+            },
           },
-          "required": [
-            "title",
-            "genre",
-            "summary"
-          ]
-        }
+          required: [
+            'title',
+            'genre',
+            'summary',
+          ],
+        },
       },
-      async ({title, genre, release, summary}: any) => {
+      async ({ title, genre, release, summary }: any) => {
         setBook({
-          title: title,
-          genre: genre,
-          release: release,
-          summary: summary,
+          title,
+          genre,
+          release,
+          summary,
         })
-      }
+      },
     )
 
     // Handle realtime events
@@ -414,24 +412,12 @@ export function ConsolePage() {
         {/* Sidebar */}
         <div className="content-right">
           {victorHugoImage && (
-              <img src={victorHugoImage} alt="Victor Hugo" style={{ width: '100%', marginBottom: '20px', borderRadius: '20px' }} />
+            <img className="victor-hugo" src={victorHugoImage} alt="Victor Hugo" />
           )}
           <ImageDisplay prompt={imageUrl} api={apiKey} />
           <ShowBook book={book} />
         </div>
       </div>
     </div>
-  )
-}
-
-export function ShowBook(book: any) {
-  console.log(book)
-  if (book.book == null)
-    return (<></>)
-  return (
-    <>
-      <p>Title {book.book.title}</p>
-      <p>Genre {book.book.genre}</p>
-    </>
   )
 }

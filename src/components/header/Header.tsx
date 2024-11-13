@@ -11,8 +11,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ apiKey, onResetApiKey, isLocalRelay }) => (
   <div className="content-top">
     <div className="content-title">
-      <img src="/openai-logomark.svg" alt="OpenAI Logo" />
-      <span>realtime console</span>
+      <img src="/hugo-icon.png" alt="HugoGPT Logo" />
+      <span>HugoGPT</span>
     </div>
     <div className="content-api-key">
       {!isLocalRelay && (

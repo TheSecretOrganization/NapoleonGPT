@@ -24,11 +24,13 @@
     .content-title {
       flex-grow: 1;
       display: flex;
+      font-size: large;
       align-items: center;
+      font-weight: 500;
       gap: 12px;
       img {
-        width: 24px;
-        height: 24px;
+        width: 50px;
+        height: 50px;
       }
     }
   }
@@ -66,6 +68,7 @@
       }
     }
     .content-right {
+      overflow: scroll;
       width: 300px;
       flex-shrink: 0;
       display: flex;
@@ -277,4 +280,15 @@
       }
     }
   }
+}
+
+.victor-hugo {
+  min-height: 300px;
+  width: 300px;
+  height: auto;
+  border-radius: 35px;
+  background-color: rgba(249, 249, 249, 0.68);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 }

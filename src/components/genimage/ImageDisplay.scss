@@ -1,5 +1,9 @@
 .img {
   width: 300px;
   height: auto;
-  border-radius: 20px;
+  border-radius: 10%;
+  background-color: rgba(249, 249, 249, 0.68);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
