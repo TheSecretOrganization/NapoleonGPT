@@ -31,11 +31,13 @@
     "@openai/realtime-api-beta": "github:openai/openai-realtime-api-beta",
     "dotenv": "^16.4.5",
     "leaflet": "^1.9.4",
+    "openai": "^4.72.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
     "react-leaflet": "^4.2.1",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
